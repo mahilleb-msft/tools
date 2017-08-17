@@ -4,67 +4,67 @@
     "parameters": {
         "location": {
             "type" : "string",
-            "value": "westus"
+            "defaultValue": "westus"
         },
         "virtualMachineName": {
             "type" : "string",
-            "value": "WindowsBuildAgent"
+            "defaultValue": "WindowsBuildAgent"
         },
         "virtualMachineSize": {
             "type" : "string",
-            "value": "Standard_D2_v2"
+            "defaultValue": "Standard_D2_v2"
         },
         "adminUsername": {
             "type" : "string",
-            "value": "useradmin"
+            "defaultValue": "useradmin"
         },
         "virtualNetworkName": {
             "type" : "string",
-            "value": "WindowsBuildAgent-vnet"
+            "defaultValue": "WindowsBuildAgent-vnet"
         },
         "networkInterfaceName": {
             "type" : "string",
-            "value": "WindowsBuildAgent-ni"
+            "defaultValue": "WindowsBuildAgent-ni"
         },
         "networkSecurityGroupName": {
             "type" : "string",
-            "value": "WindowsBuildAgent-nsg"
+            "defaultValue": "WindowsBuildAgent-nsg"
         },
         "adminPassword": {
             "type" : "string",
-            "value": null
+            "defaultValue": null
         },
         "diagnosticsStorageAccountName": {
             "type" : "string",
-            "value": "WindowsBuildAgent-st"
+            "defaultValue": "WindowsBuildAgent-st"
         },
         "diagnosticsStorageAccountType": {
             "type" : "string",
-            "value": "Standard_LRS"
+            "defaultValue": "Standard_LRS"
         },
         "diagnosticsStorageAccountId": {
             "type" : "string",
-            "value": "Microsoft.Storage/storageAccounts/WindowsBuildAgent-st"
+            "defaultValue": "Microsoft.Storage/storageAccounts/WindowsBuildAgent-st"
         },
         "addressPrefix": {
             "type" : "string",
-            "value": "10.3.0.0/24"
+            "defaultValue": "10.3.0.0/24"
         },
         "subnetName": {
             "type" : "string",
-            "value": "default"
+            "defaultValue": "default"
         },
         "subnetPrefix": {
             "type" : "string",
-            "value": "10.3.0.0/24"
+            "defaultValue": "10.3.0.0/24"
         },
         "publicIpAddressName": {
             "type" : "string",
-            "value": "WindowsBuildAgent-ip"
+            "defaultValue": "WindowsBuildAgent-ip"
         },
         "publicIpAddressType": {
             "type" : "string",
-            "value": "Dynamic"
+            "defaultValue": "Dynamic"
         }
     },
     "variables": {

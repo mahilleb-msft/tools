@@ -1,0 +1,8 @@
+{
+  "itemDisplayName": "Deploy a Windows build agent for VSTS",
+  "icon": "windowsVM",
+  "description": "This template prepares a Windows build machine for VSTS.",
+  "summary": "This template takes a minimum amount of parameters and deploys a Windows VM, using the latest patched version.",
+  "githubUsername": "dend",
+  "dateUpdated": "2017-08-17"
+}

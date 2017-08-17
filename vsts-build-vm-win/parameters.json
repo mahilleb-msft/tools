@@ -6,7 +6,7 @@
             "value": "westus"
         },
         "virtualMachineName": {
-            "value": "WindowsBuildAgent"
+            "value": "winbuildagent"
         },
         "virtualMachineSize": {
             "value": "Standard_D2_v2"

@@ -27,13 +27,13 @@
             "value": null
         },
         "diagnosticsStorageAccountName": {
-            "value": "WindowsBuildAgent-st"
+            "value": "winbuildagentsd"
         },
         "diagnosticsStorageAccountType": {
             "value": "Standard_LRS"
         },
         "diagnosticsStorageAccountId": {
-            "value": "Microsoft.Storage/storageAccounts/WindowsBuildAgent-st"
+            "value": "Microsoft.Storage/storageAccounts/winbuildagentsd"
         },
         "addressPrefix": {
             "value": "10.3.0.0/24"

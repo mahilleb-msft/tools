@@ -124,7 +124,7 @@
                         "value": "westus"
                     },
                     "fileUris": {
-                        "value": "https://iaasv2tempstorewestus.blob.core.windows.net/vmextensionstemporary-10037ffe8b6f9449-20170817193637895/mref-mdoc-exec.ps1?sv=2015-04-05&sr=c&sig=ZzNF9ZVW%2F5hqu6p12p%2BD%2F8%2FVOxbay%2B7gNlcIUhd6LgA%3D&se=2017-08-18T19%3A36%3A37Z&sp=rw"
+                        "value": "https://raw.githubusercontent.com/dend/tools/master/scripts/install-netfx-471preview.ps1"
                     }
                 }
             },

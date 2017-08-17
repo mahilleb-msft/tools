@@ -118,7 +118,7 @@
                 },
                 "parameters": {
                     "vmName": {
-                        "value": "WindowsBuildAgent"
+                        "value": "winbuildagent"
                     },
                     "location": {
                         "value": "westus"

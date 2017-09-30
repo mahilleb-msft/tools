@@ -5,6 +5,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading.Tasks;
 
 namespace RedirectGenerator
 {
@@ -26,45 +27,45 @@ namespace RedirectGenerator
                 && !string.IsNullOrWhiteSpace(options.TargetFolder) && !string.IsNullOrWhiteSpace(options.RepoRoot))
             {
                 RedirectionRoot root = new RedirectionRoot();
-                
+
                 var filesNeedingToBeRedirected = Directory.GetFiles(options.ContentPath);
-                
+
                 if (filesNeedingToBeRedirected != null)
                 {
-                    int totalFiles = filesNeedingToBeRedirected.Count();
-                    int counter = 0;
-
-                    foreach(var file in filesNeedingToBeRedirected)
-                    {  
+                    Parallel.ForEach(filesNeedingToBeRedirected, async (file) =>
+                    {
                         if (!Path.GetFileName(file).StartsWith(".") && !Path.GetFileName(file).StartsWith("toc.yml"))
                         {
-                            counter++;
-
                             var targetUrl = "https://docs.microsoft.com" + options.BaseUrl + "/" + Path.GetFileNameWithoutExtension(file);
 
                             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(targetUrl);
                             request.Method = "HEAD";
+                            request.Timeout = int.MaxValue;
                             request.AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip;
 
                             try
                             {
-                                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-                            }catch (Exception ex)
-                            {
-                                Console.WriteLine("[" + counter + " of " + totalFiles + "] Failed redirect for " + targetUrl);
-                                continue;
+                                var response = (HttpWebResponse)request.GetResponse();
+
+                                if (options.DeleteFiles)
+                                {
+                                    File.Delete(file);
+                                }
+                                root.RedirectionObjects.Add(new RedirectionObject()
+                                {
+                                    SourcePath = file.Replace(options.RepoRoot, "").Replace(@"\", @"/").Remove(0, 1),
+                                    RedirectUrl = options.BaseUrl + "/" + Path.GetFileNameWithoutExtension(file),
+                                    RedirectDocumentId = true
+                                });
+
+                                Console.WriteLine("Created redirect for " + targetUrl);
                             }
-
-                            root.RedirectionObjects.Add(new RedirectionObject()
+                            catch (Exception ex)
                             {
-                                SourcePath = file.Replace(options.RepoRoot, "").Replace(@"\",@"/").Remove(0,1),
-                                RedirectUrl = options.BaseUrl + "/" + Path.GetFileNameWithoutExtension(file),
-                                RedirectDocumentId = true
-                            });
-
-                            Console.WriteLine("[" + counter + " of " + totalFiles + "] Created redirect for " + targetUrl);
+                                Console.WriteLine("Failed redirect for " + targetUrl);
+                            }
                         }
-                    }
+                    });
 
                     var jsonString = JsonConvert.SerializeObject(root);
 

@@ -31,5 +31,12 @@ namespace RedirectGenerator
             get;
             set;
         }
+
+        [Option('d', "delete", Required = true, HelpText = "Choose whether to delete files that need to be redirected.")]
+        public bool DeleteFiles
+        {
+            get;
+            set;
+        }
     }
 }

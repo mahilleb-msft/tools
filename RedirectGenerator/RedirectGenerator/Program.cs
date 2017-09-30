@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
+using System.Net;
 
 namespace RedirectGenerator
 {
@@ -33,12 +34,30 @@ namespace RedirectGenerator
                     {
                         if (!Path.GetFileName(file).StartsWith(".") && !Path.GetFileName(file).StartsWith("toc.yml"))
                         {
+                            var targetUrl = "https://docs.microsoft.com" + options.BaseUrl + "/" + Path.GetFileNameWithoutExtension(file);
+
+                            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(targetUrl);
+                            request.Method = "HEAD";
+                            request.AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip;
+                            request.Timeout = 5000;
+
+                            try
+                            {
+                                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                            }catch (Exception ex)
+                            {
+                                Console.WriteLine("Failed redirect for " + targetUrl);
+                                continue;
+                            }
+
                             root.RedirectionObjects.Add(new RedirectionObject()
                             {
-                                SourcePath = file.Replace(options.RepoRoot, "").Replace(@"\\",@"\").Remove(0,1),
-                                RedirectUrl = options.BaseUrl + "/" + Path.GetFileNameWithoutExtension(file),
+                                SourcePath = file.Replace(options.RepoRoot, "").Replace(@"\\",@"/").Remove(0,1),
+                                RedirectUrl = targetUrl,
                                 RedirectDocumentId = true
                             });
+
+                            Console.WriteLine("Created redirect for " + targetUrl);
                         }
                     }
 

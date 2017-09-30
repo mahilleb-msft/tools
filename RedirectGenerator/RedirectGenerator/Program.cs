@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
+using System.Linq;
 using System.Net;
 
 namespace RedirectGenerator
@@ -30,10 +31,15 @@ namespace RedirectGenerator
                 
                 if (filesNeedingToBeRedirected != null)
                 {
+                    int totalFiles = filesNeedingToBeRedirected.Count();
+                    int counter = 0;
+
                     foreach(var file in filesNeedingToBeRedirected)
-                    {
+                    {  
                         if (!Path.GetFileName(file).StartsWith(".") && !Path.GetFileName(file).StartsWith("toc.yml"))
                         {
+                            counter++;
+
                             var targetUrl = "https://docs.microsoft.com" + options.BaseUrl + "/" + Path.GetFileNameWithoutExtension(file);
 
                             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(targetUrl);
@@ -45,18 +51,18 @@ namespace RedirectGenerator
                                 HttpWebResponse response = (HttpWebResponse)request.GetResponse();
                             }catch (Exception ex)
                             {
-                                Console.WriteLine("Failed redirect for " + targetUrl);
+                                Console.WriteLine("[" + counter + " of " + totalFiles + "] Failed redirect for " + targetUrl);
                                 continue;
                             }
 
                             root.RedirectionObjects.Add(new RedirectionObject()
                             {
-                                SourcePath = file.Replace(options.RepoRoot, "").Replace(@"\\",@"/").Remove(0,1),
-                                RedirectUrl = targetUrl,
+                                SourcePath = file.Replace(options.RepoRoot, "").Replace(@"\",@"/").Remove(0,1),
+                                RedirectUrl = options.BaseUrl + "/" + Path.GetFileNameWithoutExtension(file),
                                 RedirectDocumentId = true
                             });
 
-                            Console.WriteLine("Created redirect for " + targetUrl);
+                            Console.WriteLine("[" + counter + " of " + totalFiles + "] Created redirect for " + targetUrl);
                         }
                     }
 

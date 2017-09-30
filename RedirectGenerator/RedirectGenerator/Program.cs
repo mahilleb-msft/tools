@@ -39,7 +39,6 @@ namespace RedirectGenerator
                             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(targetUrl);
                             request.Method = "HEAD";
                             request.AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip;
-                            request.Timeout = 5000;
 
                             try
                             {

@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.16
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RedirectGenerator", "RedirectGenerator\RedirectGenerator.csproj", "{EBA1FFEC-D015-4355-8C7E-2795F7DD194D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EBA1FFEC-D015-4355-8C7E-2795F7DD194D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EBA1FFEC-D015-4355-8C7E-2795F7DD194D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EBA1FFEC-D015-4355-8C7E-2795F7DD194D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EBA1FFEC-D015-4355-8C7E-2795F7DD194D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AD75839C-AB7E-4D82-8FF8-CA7B55E2DF75}
+	EndGlobalSection
+EndGlobal

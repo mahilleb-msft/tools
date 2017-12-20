@@ -38,5 +38,12 @@ namespace RedirectGenerator
             get;
             set;
         }
+
+        [Option('m', "metatype", Required = true, HelpText = "Type of the original content to be redirected.")]
+        public string MetaType
+        {
+            get;
+            set;
+        }
     }
 }

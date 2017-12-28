@@ -39,6 +39,8 @@ namespace versionupdater
                         Console.WriteLine($"Lines in file: {csvFile.Count()}");
                         foreach(var line in csvFile)
                         {
+                            Console.WriteLine("Processing CSV entry...");
+
                             var packageId = line[1];
                             packageId = Regex.Replace(packageId, @"(\[(.*?)\])*", "");
 

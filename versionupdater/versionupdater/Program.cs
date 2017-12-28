@@ -30,10 +30,13 @@ namespace versionupdater
                     StringBuilder builder = new StringBuilder();
                     using (FileStream stream = new FileStream(options.CsvPath, FileMode.Open))
                     {
+                        Console.WriteLine("File opened...");
                         CsvOptions csvOptions = new CsvOptions();
                         csvOptions.HeaderMode = HeaderMode.HeaderAbsent;
 
                         var csvFile = CsvReader.ReadFromStream(stream, csvOptions);
+
+                        Console.WriteLine($"Lines in file: {csvFile.Count()}");
                         foreach(var line in csvFile)
                         {
                             var packageId = line[1];

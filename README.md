@@ -14,3 +14,4 @@ A collection of tools that can help with different processes and tasks. No impli
 |-----|-----|
 |tripled|![Build status](https://apidrop.visualstudio.com/_apis/public/build/definitions/97663bb1-33b9-48bf-ab0d-6ab65814469c/357/badge)|
 |versionupdater|![Build status](https://apidrop.visualstudio.com/_apis/public/build/definitions/97663bb1-33b9-48bf-ab0d-6ab65814469c/358/badge)|
+|popimport|![Build status](https://apidrop.visualstudio.com/_apis/public/build/definitions/97663bb1-33b9-48bf-ab0d-6ab65814469c/359/badge)|

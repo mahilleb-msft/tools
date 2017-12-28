@@ -3,6 +3,7 @@ using Csv;
 using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -13,6 +14,15 @@ namespace versionupdater
     {
         static void Main(string[] args)
         {
+            Console.WriteLine("Version Updater 1.0");
+            if (args.Any())
+            {
+                foreach (string arg in args)
+                {
+                    Console.WriteLine(arg);
+                }
+            }
+
             Parser.Default.ParseArguments<CommandLineOptions>(args).WithParsed(async options =>
             {
                 if (!string.IsNullOrWhiteSpace(options.CsvPath))

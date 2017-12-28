@@ -42,6 +42,8 @@ namespace versionupdater
                             var packageId = line[1];
                             packageId = Regex.Replace(packageId, @"(\[(.*?)\])*", "");
 
+                            Console.WriteLine($"Package ID: {packageId}");
+
                             HttpClient client = new HttpClient();
                             var response = await client.GetAsync($"https://api.nuget.org/v3-flatcontainer/{packageId}/index.json");
                             var contents = await response.Content.ReadAsStringAsync();
@@ -59,8 +61,6 @@ namespace versionupdater
                     File.WriteAllText(options.CsvPath, builder.ToString());
                 }
             });
-
-            Console.Read();
         }
     }
 }

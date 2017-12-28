@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace versionupdater
 {
@@ -23,7 +24,7 @@ namespace versionupdater
                 }
             }
 
-            Parser.Default.ParseArguments<CommandLineOptions>(args).WithParsed(async options =>
+            Parser.Default.ParseArguments<CommandLineOptions>(args).WithParsed(options =>
             {
                 if (!string.IsNullOrWhiteSpace(options.CsvPath))
                 {
@@ -38,27 +39,32 @@ namespace versionupdater
 
                         var csvLines = csvFile.ToList();
                         Console.WriteLine($"Lines in file: {csvLines.Count()}");
-                        foreach(var line in csvLines)
+
+                        Task.Run(async () =>
                         {
-                            Console.WriteLine("Processing CSV entry...");
+                            foreach (var line in csvLines)
+                            {
+                                Console.WriteLine("Processing CSV entry...");
 
-                            var packageId = line[1];
-                            packageId = Regex.Replace(packageId, @"(\[(.*?)\])*", "");
+                                var packageId = line[1];
+                                packageId = Regex.Replace(packageId, @"(\[(.*?)\])*", "");
 
-                            Console.WriteLine($"Package ID: {packageId}");
+                                Console.WriteLine($"Package ID: {packageId}");
+                                HttpClient client = new HttpClient();
+                                var response =
+                                    await client.GetAsync(
+                                        $"https://api.nuget.org/v3-flatcontainer/{packageId}/index.json");
+                                var contents = await response.Content.ReadAsStringAsync();
 
-                            HttpClient client = new HttpClient();
-                            var response = await client.GetAsync($"https://api.nuget.org/v3-flatcontainer/{packageId}/index.json");
-                            var contents = await response.Content.ReadAsStringAsync();
+                                JObject jsonContent = JObject.Parse(contents);
+                                string version = jsonContent.First.First.Last.ToString();
 
-                            JObject jsonContent = JObject.Parse(contents);
-                            string version = jsonContent.First.First.Last.ToString();
+                                Console.WriteLine(packageId);
+                                Console.WriteLine("Latest version: " + version);
 
-                            Console.WriteLine(packageId);
-                            Console.WriteLine("Latest version: " + version);
-
-                            builder.AppendLine($"{line[0]},{line[1]},{version}");
-                        }
+                                builder.AppendLine($"{line[0]},{line[1]},{version}");
+                            }
+                        }).Wait();
                     }
 
                     File.WriteAllText(options.CsvPath, builder.ToString());

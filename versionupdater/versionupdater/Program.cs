@@ -36,8 +36,9 @@ namespace versionupdater
 
                         var csvFile = CsvReader.ReadFromStream(stream, csvOptions);
 
-                        Console.WriteLine($"Lines in file: {csvFile.Count()}");
-                        foreach(var line in csvFile)
+                        var csvLines = csvFile.ToList();
+                        Console.WriteLine($"Lines in file: {csvLines.Count()}");
+                        foreach(var line in csvLines)
                         {
                             Console.WriteLine("Processing CSV entry...");
 

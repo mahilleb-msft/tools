@@ -1,0 +1,2 @@
+uservoice>=0.0.23
+PyGithub>=1.37

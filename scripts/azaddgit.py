@@ -76,10 +76,6 @@ def reverse_cleanup_unenc (path):
 
 # FYI: Check for BOM and remove it.
 # This throws off the front matter reader.
-
-# Because old copy is dirty
-reverse_cleanup_unenc(LOOKUP_FOLDER)
-
 cleanup_bom(PUB_READY_FOLDER)
 cleanup_bom(LOOKUP_FOLDER)
 cleanup_unenc(PUB_READY_FOLDER)
@@ -114,6 +110,12 @@ else:
                     with open(g_file) as f:
                         post = frontmatter.load(f)
                         
+                        # For cases where there is no metadata,
+                        # better double-check if it's worth going on.
+                        if (not post.metadata):
+                            print ("No metadata!")
+                            q = input("Continue?")
+
                         content_url = ''
                         original_content_url = ''
 
@@ -122,25 +124,27 @@ else:
                             print ('Metadata for the content_git_url:')
                             print (content_url)
                         if post.get('original_content_git_url'):
-                            original_content_git_url = post.get('original_content_git_url')
+                            original_content_url = post.get('original_content_git_url')
                             print ('Metadata for the original_content_git_url:')
-                            print (original_content_git_url)
+                            print (original_content_url)
 
                         print ('Reading target: ' + s_file_path)
 
                         with open(s_file_path, 'r+') as s_f:
-
                             s_post = frontmatter.load(s_f)
 
                             if (content_url):                          
                                 s_post.metadata['content_git_url'] = content_url
                             
                             if (original_content_url):                          
-                                s_post.metadata['original_content_git_url'] = content_url
-                                
+                                s_post.metadata['original_content_git_url'] = original_content_url
+                            
+                            s_f.seek(0)
                             s_f.write(frontmatter.dumps(s_post))
+                            s_f.truncate()
 
 reverse_cleanup_unenc(PUB_READY_FOLDER)
+reverse_cleanup_unenc(LOOKUP_FOLDER)
 
 # And this is how I feel now that the script is working: 
 #                                                                       ,---,  

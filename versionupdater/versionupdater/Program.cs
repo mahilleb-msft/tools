@@ -1,5 +1,6 @@
 ﻿using CommandLine;
 using Csv;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
@@ -8,6 +9,7 @@ using System.Net.Http;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using versionupdater.Models;
 
 namespace versionupdater
 {
@@ -53,16 +55,30 @@ namespace versionupdater
                                 HttpClient client = new HttpClient();
                                 var response =
                                     await client.GetAsync(
-                                        $"https://api.nuget.org/v3-flatcontainer/{packageId}/index.json");
+                                        $"https://api.nuget.org/v3/registration3/{packageId.ToLower()}/index.json");
                                 var contents = await response.Content.ReadAsStringAsync();
 
-                                JObject jsonContent = JObject.Parse(contents);
-                                string version = jsonContent.First.First.Last.ToString();
+                                try
+                                {
+                                    JObject jsonContent = JObject.Parse(contents);
+                                    var deserializedContent = JsonConvert.DeserializeObject<NuGetPackage>(jsonContent.ToString());
 
-                                Console.WriteLine(packageId);
-                                Console.WriteLine("Latest version: " + version);
+                                    var version = (from c in deserializedContent.items.Last().items where c.catalogEntry.listed == true select c).Last().catalogEntry.version;
 
-                                builder.AppendLine($"{line[0]},{line[1]},{version}");
+                                    Console.WriteLine(packageId);
+
+                                    if (packageId.Equals("Microsoft.ServiceFabric.Data", StringComparison.InvariantCultureIgnoreCase))
+                                    {
+                                        Console.WriteLine("Here it is!");
+                                    }
+                                    Console.WriteLine("Latest version: " + version);
+
+                                    builder.AppendLine($"{line[0]},{line[1]},{version}");
+                                }
+                                catch
+                                {
+                                    Console.WriteLine("Could not get information for package: " + packageId);
+                                }
                             }
                         }).Wait();
                     }

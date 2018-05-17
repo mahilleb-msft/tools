@@ -12,4 +12,4 @@ sample:
   extensions:
   - someExtensionEntry:
     - altEntry
-    - altContent
+    - altContents

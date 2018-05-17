@@ -1,6 +1,6 @@
 ### YamlMime:Sample
 sample:
-- name: Using Azure APIs
+- name: Using Azure API
   description: A sample that shows how to use Azure APIs.
   generateZip: true
   author: dend

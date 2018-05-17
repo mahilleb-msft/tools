@@ -1,0 +1,15 @@
+### YamlMime:Sample
+sample:
+- name: Generic tools
+  description: This is a sample that outlines how tools work!
+  generateZip: true
+  author: dend
+  languages:
+  - csharp
+  - fsharp
+  technologies:
+  - azure
+  extensions:
+  - someExtensionEntry:
+    - altEntry
+    - altContent

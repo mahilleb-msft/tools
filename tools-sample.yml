@@ -1,7 +1,7 @@
 ### YamlMime:Sample
 sample:
 - name: Generic tools
-  description: This is a sample that outlines how tools work!
+  description: This is a sample that outlines how tools work! Woohoo content!
   generateZip: true
   author: dend
   languages:
@@ -9,8 +9,6 @@ sample:
   - fsharp
   technologies:
   - azure
-  - windows
-  - office
   extensions:
   - someExtensionEntry:
     - altEntry

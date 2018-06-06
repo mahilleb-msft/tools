@@ -11,6 +11,7 @@ sample:
   - azure
   - windows
   - office
+  - powershell
   extensions:
   - someExtensionEntry:
     - altEntry

@@ -9,7 +9,6 @@ sample:
   - fsharp
   technologies:
   - azure
-  - office
   - windows
   - azure-cli
   extensions:

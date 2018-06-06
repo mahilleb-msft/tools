@@ -9,6 +9,7 @@ sample:
   - fsharp
   technologies:
   - azure
+  - windows
   extensions:
   - someExtensionEntry:
     - altEntry

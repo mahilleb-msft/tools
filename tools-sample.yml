@@ -10,6 +10,7 @@ sample:
   technologies:
   - azure
   - office
+  - windows
   extensions:
   - someExtensionEntry:
     - altEntry

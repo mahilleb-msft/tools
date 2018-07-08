@@ -16,7 +16,7 @@ Ilmol (_Korean:_ sunset) is a script that generates Markdown blog posts and chec
 | `{{alt_text}}` | Alternative text for the image. |
 | `{{camera_model_string}}` | String identifying the camera model. |
 | `{{camera_model_url}}` | URL for the camera model. |
-| `{{f_number}}` | f number. |
+| `{{f_number}}` | f number (obtained through `get_f_number(aperture_value)`) |
 | `{{shutter_speed}}` | Shutter speed. |
 | `{{iso}}` | ISO. |
 | `{{lens}}` | Lens information. |

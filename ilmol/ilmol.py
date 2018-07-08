@@ -4,6 +4,15 @@ from PIL.ExifTags import TAGS
 from iptcinfo3 import IPTCInfo
 import json
 
+class ImageContainer(object):
+    @property
+    def title(self):
+        return self._title
+
+    @title.setter
+    def title(self, value):
+        self._title = value
+
 class Ilmol(object):
     CONFIG_DATA=''
 
@@ -24,11 +33,13 @@ class Ilmol(object):
 
     def generate_markdown_file(self, imageslug):
         return 0
-    
+
     def process_images(self, images):
         for image in images:
+            image_container = ImageContainer()
+
             metadata = {}
-            title = ''
+
             caption = ''
             model = ''
             city = ''
@@ -41,28 +52,31 @@ class Ilmol(object):
                 print ("[INFO] Getting IPTC information from ", image)
                 iptc_info = IPTCInfo(image)
 
-                #print("[INFO] ", iptc_info)
+                print("[INFO] ", iptc_info)
 
                 # Using "in" to check whether something is in the array for this case
                 # produces a hang.
 
-                try:
-                    title = iptc_info['object name'].decode('utf-8')
-                    print("[INFO] Title recognized: ", title)
-                except:
-                    print("[ERROR] Could not obtain title.")
+                if (iptc_info):
+                    try:
+                        image_container.title = iptc_info['object name'].decode('utf-8')
+                        print("[INFO] Title recognized: ", image_container.title)
+                    except:
+                        print("[ERROR] Could not obtain title.")
 
-                try:
-                    country = iptc_info['country/primary location name'].decode('utf-8')
-                    print("[INFO] Country recognized: ", country)
-                except:
-                    print("[ERROR] Could not obtain country.")
+                    try:
+                        country = iptc_info['country/primary location name'].decode('utf-8')
+                        print("[INFO] Country recognized: ", country)
+                    except:
+                        print("[ERROR] Could not obtain country.")
 
-                try:
-                    city = iptc_info['city'].decode('utf-8')
-                    print("[INFO] City recognized: ", city)
-                except:
-                    print("[ERROR] Could not obtain city.")
+                    try:
+                        city = iptc_info['city'].decode('utf-8')
+                        print("[INFO] City recognized: ", city)
+                    except:
+                        print("[ERROR] Could not obtain city.")
+                else:
+                    print ("[INFO] No IPTC data to process.")
 
                 print ("[INFO] Getting EXIF information from ", image)
 
@@ -72,15 +86,15 @@ class Ilmol(object):
                 # print (metadata)
             except:
                 print ('Error occurred reading the metadata.')
-            
+
             if ('ImageDescription' in metadata):
                 caption = metadata['ImageDescription']
                 print("[INFO] Caption recognized: ", caption)
-            
+
             if ('Model' in metadata):
                 model = metadata['Model']
                 print("[INFO] Model recognized: ", model)
-            
+
             if ('UserComment' in metadata):
                 slug = metadata['UserComment'].decode('ascii').split('\x00\x00\x00')[1]
                 print("[INFO] Slug recognized: ", slug)

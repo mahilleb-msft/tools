@@ -1,0 +1,13 @@
+{
+    "template": "_template.md",
+    "cameraBindings":[
+        {
+            "model": "Nikon D5000",
+            "link": "https://en.wikipedia.org/wiki/Nikon_D5000"
+        }
+    ],
+    "repo": "https://github.com/dend/blog",
+    "branch": "smoke-test",
+    "image_folder": "dennisdel/static/images/postmedia/ilmol",
+    "url_template": "https://dennisdel.com/images/postmedia/ilmol/"
+}

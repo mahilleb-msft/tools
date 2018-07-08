@@ -1,0 +1,2 @@
+Pillow==5.2.0
+-e git://github.com/jamesacampbell/iptcinfo3.git#egg=iptcinfo3

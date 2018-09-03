@@ -1,7 +1,8 @@
 param (
     [string]$WorkPath,
     [string]$CSVPath,
-    [string]$TFM='net471'
+    [string]$TFM='net471',
+    [string]$LocalSource
 )
 
 # Local Build Provisioning Script
@@ -15,10 +16,17 @@ if ([string]::IsNullOrWhiteSpace($WorkPath) -or [string]::IsNullOrWhiteSpace($CS
 }
 
 # If there is no proper CSV, we need to exit.
-If (-not (Test-Path $CSVPath)) {
+if (-not (Test-Path $CSVPath)) {
     Write-Error 'The specified package CSV does not exist.'
     exit
 }
+
+# If local source was specified, it needs to exist.
+if ($LocalSource -and -not (Test-Path $LocalSource)) {
+    Write-Error 'The specified local source does not exist.'
+    exit
+}
+$LocalSource = Resolve-Path $LocalSource
 
 # Create the specified folders, if necessary.
 if (-not (Test-Path $WorkPath))
@@ -26,6 +34,7 @@ if (-not (Test-Path $WorkPath))
     Write-Output 'Creating the work directory...'
     New-Item $WorkPath -Type directory -Force
 }
+$WorkPath = Resolve-Path $WorkPath
 
 ## Provisioning URLs
 $popImportUrl = "https://bindrop.blob.core.windows.net/tools/popimport.zip"
@@ -49,15 +58,18 @@ $folderName = [io.path]::combine($WorkPath, '_tool_dl')
 New-Item $folderName -Type Directory -Force
 
 # Folder for extracted tools
-$folderName = [io.path]::combine($WorkPath, '_tool_bin')
-New-Item $folderName -Type Directory -Force
+$toolBinPath = [io.path]::combine($WorkPath, '_tool_bin')
+if (Test-Path $toolBinPath) {
+  Remove-Item -Recurse -Force $toolBinPath
+}
+New-Item $toolBinPath -Type Directory -Force
 
 # Output URLs
 $popImportOutput = [io.path]::combine($WorkPath, '_tool_dl', 'popimport.zip')
 $nueOutput = [io.path]::combine($WorkPath, '_tool_dl','nue.zip')
 $mdocOutput = [io.path]::combine($WorkPath, '_tool_dl','mdoc.zip')
 $tripledOutput = [io.path]::combine($WorkPath, '_tool_dl','tripled.zip')
-$nugetOutput = [io.path]::combine($WorkPath, '_tool_bin','nuget.exe')
+$nugetOutput = [io.path]::combine($toolBinPath,'nuget.exe')
 
 # Download Triggers
 Write-Output 'Downloading tools...'
@@ -71,7 +83,6 @@ Invoke-WebRequest -Uri $nugetUrl -OutFile $nugetOutput -Verbose
 
 # Extract tools
 Write-Output 'Extracting tools...'
-$toolBinPath = [io.path]::combine($WorkPath, '_tool_bin')
 Add-Type -assembly "system.io.compression.filesystem"
 [io.compression.zipfile]::ExtractToDirectory($popImportOutput, $toolBinPath)
 [io.compression.zipfile]::ExtractToDirectory($nueOutput, $toolBinPath)
@@ -80,19 +91,39 @@ Add-Type -assembly "system.io.compression.filesystem"
 
 Write-Output 'Getting packages...'
 $nuePath = [io.path]::combine($toolBinPath,'a\Nue\Nue\bin\Release\Nue.exe')
-& $nuePath -m extract -p $CSVPath -o $outputBinaries -f $TFM
+if ($LocalSource) {
+  & $nuePath -m le -p $CSVPath -o $outputBinaries -f $TFM -s $LocalSource -n (Split-Path $nugetOutput)
+} else {
+  & $nuePath -m extract -p $CSVPath -o $outputBinaries -f $TFM
+}
+if ($LASTEXITCODE -ne 0) {
+  throw "Running $nuePath failed"
+}
 
 $mdocPath = [io.path]::combine($toolBinPath,'mdoc.exe')
 & $mdocPath fx-bootstrap $outputBinaries
+if ($LASTEXITCODE -ne 0) {
+  throw "Running $mdocPath fx-bootstrap failed"
+}
 
-$popImportPath = [io.path]::combine($toolBinPath,'pi\popimport.exe')
+$popImportPath = [io.path]::combine($toolBinPath,'a\popimport\popimport\bin\Release\popimport.exe')
 & $popImportPath -f $outputBinaries
+if ($LASTEXITCODE -ne 0) {
+  throw "Running $popImportPath failed"
+}
 
 Write-Output 'Binaries: '$outputBinaries
 Write-Output 'Documentation: '$documentationPath
 
 cd $toolBinPath
 & $mdocPath update -fx $outputBinaries -o $documentationPath -lang docid -lang vb.net -lang fsharp -lang javascript --debug
+if ($LASTEXITCODE -ne 0) {
+  throw "Running $mdocPath update failed"
+}
 
-$tripledPath = [io.path]::combine($toolBinPath,'tripled\tripled.exe')
+$tripledPath = [io.path]::combine($toolBinPath,'a\tripled\tripled\bin\Release\tripled.exe')
+
 & $tripledPath -x $documentationPath -l true
+if ($LASTEXITCODE -ne 0) {
+  throw "Running $tripledPath failed"
+}
